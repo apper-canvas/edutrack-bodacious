@@ -1,4 +1,6 @@
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import React from "react";
+import Error from "@/components/ui/Error";
 
 // Mock data for departments - professional realistic content
 const mockDepartments = [
@@ -89,60 +91,147 @@ class DepartmentService {
     this.departments = [...mockDepartments];
     this.nextId = Math.max(...this.departments.map(d => d.Id)) + 1;
     
-    // Ready for ApperClient integration when department table becomes available
-    // const { ApperClient } = window.ApperSDK;
-    // this.apperClient = new ApperClient({
-    //   apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
-    //   apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
-    // });
-    // this.tableName = 'department_c';
+    // Initialize ApperClient when available
+    this.isTableAvailable = false;
+    this.tableName = 'department_c';
+    
+    if (typeof window !== 'undefined' && window.ApperSDK) {
+      const { ApperClient } = window.ApperSDK;
+      this.apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+      this.isTableAvailable = true;
+    }
   }
 
-  async getAll() {
+async getAll() {
     try {
-      // Simulate API delay
-      await this.delay(300);
-      
-      // Return copies to prevent direct mutations
-      return [...this.departments];
+      if (this.isTableAvailable && this.apperClient) {
+        const params = {
+          fields: [
+            {"field": {"Name": "Id"}},
+            {"field": {"Name": "name_c"}},
+            {"field": {"Name": "description_c"}},
+            {"field": {"Name": "head_of_department_c"}},
+            {"field": {"Name": "established_year_c"}},
+            {"field": {"Name": "budget_c"}},
+            {"field": {"Name": "number_of_teachers_c"}}
+          ],
+          orderBy: [{"fieldName": "Id", "sorttype": "ASC"}]
+        };
+        
+        const response = await this.apperClient.fetchRecords(this.tableName, params);
+        
+        if (!response.success) {
+          console.error("Error fetching departments:", response.message);
+          throw new Error(response.message);
+        }
+        
+        return response.data || [];
+      } else {
+        // Fallback to mock data when table not available
+        await this.delay(300);
+        return [...this.departments];
+      }
     } catch (error) {
       console.error("Error fetching departments:", error?.response?.data?.message || error);
       throw error;
     }
   }
 
-  async getById(id) {
+async getById(id) {
     try {
-      await this.delay(200);
-      
-      const department = this.departments.find(d => d.Id === parseInt(id));
-      return department ? {...department} : null;
+      if (this.isTableAvailable && this.apperClient) {
+        const params = {
+          fields: [
+            {"field": {"Name": "Id"}},
+            {"field": {"Name": "name_c"}},
+            {"field": {"Name": "description_c"}},
+            {"field": {"Name": "head_of_department_c"}},
+            {"field": {"Name": "established_year_c"}},
+            {"field": {"Name": "budget_c"}},
+            {"field": {"Name": "number_of_teachers_c"}}
+          ]
+        };
+        
+        const response = await this.apperClient.getRecordById(this.tableName, parseInt(id), params);
+        
+        if (!response.success) {
+          console.error(`Error fetching department ${id}:`, response.message);
+          return null;
+        }
+        
+        return response.data;
+      } else {
+        // Fallback to mock data when table not available
+        await this.delay(200);
+        const department = this.departments.find(d => d.Id === parseInt(id));
+        return department ? {...department} : null;
+      }
     } catch (error) {
       console.error(`Error fetching department ${id}:`, error?.response?.data?.message || error);
       return null;
     }
   }
 
-  async create(departmentData) {
+async create(departmentData) {
     try {
-      await this.delay(400);
-      
-      const newDepartment = {
-        Id: this.nextId++,
-        Name: departmentData.Name || departmentData.name_c,
-        name_c: departmentData.name_c,
-        description_c: departmentData.description_c,
-        head_of_department_c: departmentData.head_of_department_c,
-        established_year_c: departmentData.established_year_c,
-        budget_c: departmentData.budget_c,
-        number_of_teachers_c: parseInt(departmentData.number_of_teachers_c) || 0
-      };
-      
-      this.departments.push(newDepartment);
-      toast.success('Department created successfully');
-      
-      return {...newDepartment};
-    } catch (error) {
+      if (this.isTableAvailable && this.apperClient) {
+        // Only include Updateable fields for create operation
+        const params = {
+          records: [{
+            name_c: departmentData.name_c,
+            description_c: departmentData.description_c
+          }]
+        };
+        
+        const response = await this.apperClient.createRecord(this.tableName, params);
+        
+        if (!response.success) {
+          console.error("Error creating department:", response.message);
+          toast.error(response.message);
+          throw new Error(response.message);
+        }
+        
+        if (response.results) {
+          const successful = response.results.filter(r => r.success);
+          const failed = response.results.filter(r => !r.success);
+          
+          if (failed.length > 0) {
+            console.error(`Failed to create ${failed.length} departments:`, JSON.stringify(failed));
+            failed.forEach(record => {
+              record.errors?.forEach(error => toast.error(`${error.fieldLabel}: ${error}`));
+              if (record.message) toast.error(record.message);
+            });
+          }
+          
+          if (successful.length > 0) {
+            toast.success('Department created successfully');
+            return successful[0].data;
+          }
+        }
+      } else {
+        // Fallback to mock data when table not available
+        await this.delay(400);
+        
+        const newDepartment = {
+          Id: this.nextId++,
+          Name: departmentData.Name || departmentData.name_c,
+          name_c: departmentData.name_c,
+          description_c: departmentData.description_c,
+          head_of_department_c: departmentData.head_of_department_c,
+          established_year_c: departmentData.established_year_c,
+          budget_c: departmentData.budget_c,
+          number_of_teachers_c: parseInt(departmentData.number_of_teachers_c) || 0
+        };
+        
+        this.departments.push(newDepartment);
+        toast.success('Department created successfully');
+        
+        return {...newDepartment};
+      }
+} catch (error) {
       console.error("Error creating department:", error?.response?.data?.message || error);
       toast.error("Failed to create department");
       throw error;
@@ -151,28 +240,66 @@ class DepartmentService {
 
   async update(id, departmentData) {
     try {
-      await this.delay(400);
-      
-      const index = this.departments.findIndex(d => d.Id === parseInt(id));
-      if (index === -1) {
-        throw new Error('Department not found');
+      if (this.isTableAvailable && this.apperClient) {
+        // Only include Updateable fields for update operation
+        const params = {
+          records: [{
+            Id: parseInt(id),
+            name_c: departmentData.name_c,
+            description_c: departmentData.description_c
+          }]
+        };
+        
+        const response = await this.apperClient.updateRecord(this.tableName, params);
+        
+        if (!response.success) {
+          console.error("Error updating department:", response.message);
+          toast.error(response.message);
+          throw new Error(response.message);
+        }
+        
+        if (response.results) {
+          const successful = response.results.filter(r => r.success);
+          const failed = response.results.filter(r => !r.success);
+          
+          if (failed.length > 0) {
+            console.error(`Failed to update ${failed.length} departments:`, JSON.stringify(failed));
+            failed.forEach(record => {
+              record.errors?.forEach(error => toast.error(`${error.fieldLabel}: ${error}`));
+              if (record.message) toast.error(record.message);
+            });
+          }
+          
+          if (successful.length > 0) {
+            toast.success('Department updated successfully');
+            return successful[0].data;
+          }
+        }
+      } else {
+        // Fallback to mock data when table not available
+        await this.delay(400);
+        
+        const index = this.departments.findIndex(d => d.Id === parseInt(id));
+        if (index === -1) {
+          throw new Error('Department not found');
+        }
+        
+        const updatedDepartment = {
+          ...this.departments[index],
+          Name: departmentData.Name || departmentData.name_c,
+          name_c: departmentData.name_c,
+          description_c: departmentData.description_c,
+          head_of_department_c: departmentData.head_of_department_c,
+          established_year_c: departmentData.established_year_c,
+          budget_c: departmentData.budget_c,
+          number_of_teachers_c: parseInt(departmentData.number_of_teachers_c) || 0
+        };
+        
+        this.departments[index] = updatedDepartment;
+        toast.success('Department updated successfully');
+        
+        return {...updatedDepartment};
       }
-      
-      const updatedDepartment = {
-        ...this.departments[index],
-        Name: departmentData.Name || departmentData.name_c,
-        name_c: departmentData.name_c,
-        description_c: departmentData.description_c,
-        head_of_department_c: departmentData.head_of_department_c,
-        established_year_c: departmentData.established_year_c,
-        budget_c: departmentData.budget_c,
-        number_of_teachers_c: parseInt(departmentData.number_of_teachers_c) || 0
-      };
-      
-      this.departments[index] = updatedDepartment;
-      toast.success('Department updated successfully');
-      
-      return {...updatedDepartment};
     } catch (error) {
       console.error("Error updating department:", error?.response?.data?.message || error);
       toast.error("Failed to update department");
@@ -180,25 +307,58 @@ class DepartmentService {
     }
   }
 
-  async delete(id) {
+async delete(id) {
     try {
-      await this.delay(300);
-      
-      const index = this.departments.findIndex(d => d.Id === parseInt(id));
-      if (index === -1) {
-        throw new Error('Department not found');
+      if (this.isTableAvailable && this.apperClient) {
+        const params = {
+          RecordIds: [parseInt(id)]
+        };
+        
+        const response = await this.apperClient.deleteRecord(this.tableName, params);
+        
+        if (!response.success) {
+          console.error("Error deleting department:", response.message);
+          toast.error(response.message);
+          return false;
+        }
+        
+        if (response.results) {
+          const successful = response.results.filter(r => r.success);
+          const failed = response.results.filter(r => !r.success);
+          
+          if (failed.length > 0) {
+            console.error(`Failed to delete ${failed.length} departments:`, JSON.stringify(failed));
+            failed.forEach(record => {
+              if (record.message) toast.error(record.message);
+            });
+          }
+          
+          if (successful.length > 0) {
+            toast.success('Department deleted successfully');
+            return true;
+          }
+        }
+        
+        return false;
+      } else {
+        // Fallback to mock data when table not available
+        await this.delay(300);
+        
+        const index = this.departments.findIndex(d => d.Id === parseInt(id));
+        if (index === -1) {
+          throw new Error('Department not found');
+        }
+        
+        this.departments.splice(index, 1);
+        toast.success('Department deleted successfully');
+        
+        return true;
       }
-      
-      this.departments.splice(index, 1);
-      toast.success('Department deleted successfully');
-      
-      return true;
     } catch (error) {
       console.error("Error deleting department:", error?.response?.data?.message || error);
       toast.error("Failed to delete department");
       return false;
     }
-  }
 
   // Helper method for realistic API simulation
   delay(ms) {
