@@ -1,0 +1,278 @@
+[
+  {
+    "Id": 1,
+    "firstName": "Emily",
+    "lastName": "Johnson",
+    "email": "emily.johnson@email.com",
+    "phone": "(555) 123-4567",
+    "dateOfBirth": "2006-03-15",
+    "enrollmentDate": "2023-08-20",
+    "status": "Active",
+    "gradeLevel": "11th",
+    "studentId": "STU001",
+    "address": {
+      "street": "123 Main St",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62701"
+    },
+    "emergencyContact": {
+      "name": "Sarah Johnson",
+      "relationship": "Mother",
+      "phone": "(555) 123-4568"
+    }
+  },
+  {
+    "Id": 2,
+    "firstName": "Michael",
+    "lastName": "Chen",
+    "email": "michael.chen@email.com",
+    "phone": "(555) 234-5678",
+    "dateOfBirth": "2005-07-22",
+    "enrollmentDate": "2023-08-20",
+    "status": "Active",
+    "gradeLevel": "12th",
+    "studentId": "STU002",
+    "address": {
+      "street": "456 Oak Ave",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62702"
+    },
+    "emergencyContact": {
+      "name": "David Chen",
+      "relationship": "Father",
+      "phone": "(555) 234-5679"
+    }
+  },
+  {
+    "Id": 3,
+    "firstName": "Sarah",
+    "lastName": "Williams",
+    "email": "sarah.williams@email.com",
+    "phone": "(555) 345-6789",
+    "dateOfBirth": "2007-11-08",
+    "enrollmentDate": "2023-08-20",
+    "status": "Active",
+    "gradeLevel": "10th",
+    "studentId": "STU003",
+    "address": {
+      "street": "789 Pine St",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62703"
+    },
+    "emergencyContact": {
+      "name": "Lisa Williams",
+      "relationship": "Mother",
+      "phone": "(555) 345-6790"
+    }
+  },
+  {
+    "Id": 4,
+    "firstName": "James",
+    "lastName": "Rodriguez",
+    "email": "james.rodriguez@email.com",
+    "phone": "(555) 456-7890",
+    "dateOfBirth": "2008-01-12",
+    "enrollmentDate": "2023-08-20",
+    "status": "Active",
+    "gradeLevel": "9th",
+    "studentId": "STU004",
+    "address": {
+      "street": "321 Elm St",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62704"
+    },
+    "emergencyContact": {
+      "name": "Maria Rodriguez",
+      "relationship": "Mother",
+      "phone": "(555) 456-7891"
+    }
+  },
+  {
+    "Id": 5,
+    "firstName": "Ashley",
+    "lastName": "Davis",
+    "email": "ashley.davis@email.com",
+    "phone": "(555) 567-8901",
+    "dateOfBirth": "2006-09-30",
+    "enrollmentDate": "2023-08-20",
+    "status": "Active",
+    "gradeLevel": "11th",
+    "studentId": "STU005",
+    "address": {
+      "street": "654 Maple Dr",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62705"
+    },
+    "emergencyContact": {
+      "name": "Robert Davis",
+      "relationship": "Father",
+      "phone": "(555) 567-8902"
+    }
+  },
+  {
+    "Id": 6,
+    "firstName": "Christopher",
+    "lastName": "Miller",
+    "email": "chris.miller@email.com",
+    "phone": "(555) 678-9012",
+    "dateOfBirth": "2005-04-18",
+    "enrollmentDate": "2023-08-20",
+    "status": "Active",
+    "gradeLevel": "12th",
+    "studentId": "STU006",
+    "address": {
+      "street": "987 Cedar Ave",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62706"
+    },
+    "emergencyContact": {
+      "name": "Jennifer Miller",
+      "relationship": "Mother",
+      "phone": "(555) 678-9013"
+    }
+  },
+  {
+    "Id": 7,
+    "firstName": "Jessica",
+    "lastName": "Wilson",
+    "email": "jessica.wilson@email.com",
+    "phone": "(555) 789-0123",
+    "dateOfBirth": "2007-12-05",
+    "enrollmentDate": "2023-08-20",
+    "status": "Active",
+    "gradeLevel": "10th",
+    "studentId": "STU007",
+    "address": {
+      "street": "147 Birch St",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62707"
+    },
+    "emergencyContact": {
+      "name": "Mark Wilson",
+      "relationship": "Father",
+      "phone": "(555) 789-0124"
+    }
+  },
+  {
+    "Id": 8,
+    "firstName": "Daniel",
+    "lastName": "Brown",
+    "email": "daniel.brown@email.com",
+    "phone": "(555) 890-1234",
+    "dateOfBirth": "2008-06-14",
+    "enrollmentDate": "2023-08-20",
+    "status": "Active",
+    "gradeLevel": "9th",
+    "studentId": "STU008",
+    "address": {
+      "street": "258 Walnut Ave",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62708"
+    },
+    "emergencyContact": {
+      "name": "Patricia Brown",
+      "relationship": "Mother",
+      "phone": "(555) 890-1235"
+    }
+  },
+  {
+    "Id": 9,
+    "firstName": "Amanda",
+    "lastName": "Taylor",
+    "email": "amanda.taylor@email.com",
+    "phone": "(555) 901-2345",
+    "dateOfBirth": "2006-10-27",
+    "enrollmentDate": "2023-08-20",
+    "status": "Active",
+    "gradeLevel": "11th",
+    "studentId": "STU009",
+    "address": {
+      "street": "369 Spruce Ln",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62709"
+    },
+    "emergencyContact": {
+      "name": "Thomas Taylor",
+      "relationship": "Father",
+      "phone": "(555) 901-2346"
+    }
+  },
+  {
+    "Id": 10,
+    "firstName": "Matthew",
+    "lastName": "Anderson",
+    "email": "matt.anderson@email.com",
+    "phone": "(555) 012-3456",
+    "dateOfBirth": "2005-02-09",
+    "enrollmentDate": "2023-08-20",
+    "status": "Active",
+    "gradeLevel": "12th",
+    "studentId": "STU010",
+    "address": {
+      "street": "741 Poplar St",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62710"
+    },
+    "emergencyContact": {
+      "name": "Michelle Anderson",
+      "relationship": "Mother",
+      "phone": "(555) 012-3457"
+    }
+  },
+  {
+    "Id": 11,
+    "firstName": "Samantha",
+    "lastName": "Garcia",
+    "email": "sam.garcia@email.com",
+    "phone": "(555) 123-4560",
+    "dateOfBirth": "2007-08-03",
+    "enrollmentDate": "2023-08-20",
+    "status": "Pending",
+    "gradeLevel": "10th",
+    "studentId": "STU011",
+    "address": {
+      "street": "852 Hickory Dr",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62711"
+    },
+    "emergencyContact": {
+      "name": "Carlos Garcia",
+      "relationship": "Father",
+      "phone": "(555) 123-4561"
+    }
+  },
+  {
+    "Id": 12,
+    "firstName": "Ryan",
+    "lastName": "Martinez",
+    "email": "ryan.martinez@email.com",
+    "phone": "(555) 234-5670",
+    "dateOfBirth": "2008-05-16",
+    "enrollmentDate": "2023-08-20",
+    "status": "Active",
+    "gradeLevel": "9th",
+    "studentId": "STU012",
+    "address": {
+      "street": "963 Ash Ave",
+      "city": "Springfield",
+      "state": "IL",
+      "zipCode": "62712"
+    },
+    "emergencyContact": {
+      "name": "Ana Martinez",
+      "relationship": "Mother",
+      "phone": "(555) 234-5671"
+    }
+  }
+]

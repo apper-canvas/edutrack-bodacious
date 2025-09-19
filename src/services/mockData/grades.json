@@ -1,0 +1,232 @@
+[
+  {
+    "Id": 1,
+    "studentId": 1,
+    "subject": "Mathematics",
+    "assignment": "Algebra Quiz 1",
+    "grade": 92,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-15",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 2,
+    "studentId": 1,
+    "subject": "English",
+    "assignment": "Essay #1",
+    "grade": 88,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-18",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 3,
+    "studentId": 1,
+    "subject": "Chemistry",
+    "assignment": "Lab Report 1",
+    "grade": 95,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-20",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 4,
+    "studentId": 2,
+    "subject": "Biology",
+    "assignment": "Cell Structure Exam",
+    "grade": 96,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-14",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 5,
+    "studentId": 2,
+    "subject": "Mathematics",
+    "assignment": "Calculus Test 1",
+    "grade": 89,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-16",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 6,
+    "studentId": 3,
+    "subject": "English",
+    "assignment": "Literature Analysis",
+    "grade": 91,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-17",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 7,
+    "studentId": 3,
+    "subject": "History",
+    "assignment": "World War I Essay",
+    "grade": 87,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-19",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 8,
+    "studentId": 3,
+    "subject": "Art",
+    "assignment": "Portfolio Review",
+    "grade": 94,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-21",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 9,
+    "studentId": 4,
+    "subject": "Spanish",
+    "assignment": "Vocabulary Test 1",
+    "grade": 83,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-16",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 10,
+    "studentId": 4,
+    "subject": "History",
+    "assignment": "Chapter 1-3 Quiz",
+    "grade": 79,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-18",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 11,
+    "studentId": 5,
+    "subject": "Mathematics",
+    "assignment": "Geometry Test",
+    "grade": 90,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-15",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 12,
+    "studentId": 5,
+    "subject": "English",
+    "assignment": "Poetry Analysis",
+    "grade": 86,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-19",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 13,
+    "studentId": 5,
+    "subject": "Chemistry",
+    "assignment": "Periodic Table Quiz",
+    "grade": 93,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-22",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 14,
+    "studentId": 6,
+    "subject": "Biology",
+    "assignment": "DNA Replication Test",
+    "grade": 91,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-17",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 15,
+    "studentId": 7,
+    "subject": "English",
+    "assignment": "Book Report",
+    "grade": 88,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-20",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 16,
+    "studentId": 7,
+    "subject": "Art",
+    "assignment": "Sketch Assignment",
+    "grade": 92,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-21",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 17,
+    "studentId": 8,
+    "subject": "Spanish",
+    "assignment": "Oral Presentation",
+    "grade": 85,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-18",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 18,
+    "studentId": 8,
+    "subject": "History",
+    "assignment": "Timeline Project",
+    "grade": 81,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-22",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 19,
+    "studentId": 9,
+    "subject": "Mathematics",
+    "assignment": "Statistics Quiz",
+    "grade": 94,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-16",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 20,
+    "studentId": 9,
+    "subject": "English",
+    "assignment": "Creative Writing",
+    "grade": 89,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-21",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 21,
+    "studentId": 10,
+    "subject": "Biology",
+    "assignment": "Genetics Problem Set",
+    "grade": 87,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-19",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 22,
+    "studentId": 11,
+    "subject": "English",
+    "assignment": "Grammar Test",
+    "grade": 84,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-20",
+    "gradingPeriod": "Q1"
+  },
+  {
+    "Id": 23,
+    "studentId": 12,
+    "subject": "Spanish",
+    "assignment": "Culture Report",
+    "grade": 88,
+    "maxPoints": 100,
+    "dateRecorded": "2024-01-22",
+    "gradingPeriod": "Q1"
+  }
+]
