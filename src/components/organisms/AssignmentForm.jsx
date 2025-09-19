@@ -44,8 +44,21 @@ const AssignmentForm = ({ assignment, onSuccess, onCancel, isEditing = false }) 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
 // Handle date formatting for due_date_c field
-    const processedValue = name === 'due_date_c' && value ? 
-      new Date(value).toISOString().split('T')[0] : value;
+const processedValue = name === 'due_date_c' && value ? 
+      (() => {
+        try {
+          const date = new Date(value);
+          // Check if the date is valid
+          if (isNaN(date.getTime())) {
+            console.warn('Invalid date value provided:', value);
+            return value; // Return original value if invalid
+          }
+          return date.toISOString().split('T')[0];
+        } catch (error) {
+          console.warn('Error processing date value:', value, error);
+          return value; // Return original value on error
+        }
+      })() : value;
       
     setFormData(prev => ({
       ...prev,
