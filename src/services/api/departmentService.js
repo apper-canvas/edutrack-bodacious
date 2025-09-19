@@ -179,10 +179,14 @@ async create(departmentData) {
     try {
       if (this.isTableAvailable && this.apperClient) {
         // Only include Updateable fields for create operation
-        const params = {
+const params = {
           records: [{
             name_c: departmentData.name_c,
-            description_c: departmentData.description_c
+            description_c: departmentData.description_c,
+            head_of_department_c: departmentData.head_of_department_c,
+            established_year_c: departmentData.established_year_c,
+            budget_c: departmentData.budget_c,
+            number_of_teachers_c: parseInt(departmentData.number_of_teachers_c) || 0
           }]
         };
         
@@ -242,11 +246,15 @@ async create(departmentData) {
     try {
       if (this.isTableAvailable && this.apperClient) {
         // Only include Updateable fields for update operation
-        const params = {
+const params = {
           records: [{
             Id: parseInt(id),
             name_c: departmentData.name_c,
-            description_c: departmentData.description_c
+            description_c: departmentData.description_c,
+            head_of_department_c: departmentData.head_of_department_c,
+            established_year_c: departmentData.established_year_c,
+            budget_c: departmentData.budget_c,
+            number_of_teachers_c: parseInt(departmentData.number_of_teachers_c) || 0
           }]
         };
         
