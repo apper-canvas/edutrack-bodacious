@@ -13,13 +13,13 @@ import Callback from "@/components/pages/Callback";
 import Signup from "@/components/pages/Signup";
 import Dashboard from "@/components/pages/Dashboard";
 import Classes from "@/components/pages/Classes";
+import Departments from "@/components/pages/Departments";
 import Login from "@/components/pages/Login";
 import ErrorPage from "@/components/pages/ErrorPage";
 import Reports from "@/components/pages/Reports";
 import Attendance from "@/components/pages/Attendance";
 import Students from "@/components/pages/Students";
 import { clearUser, setUser } from "@/store/userSlice";
-
 // Create auth context
 export const AuthContext = createContext(null);
 
@@ -167,8 +167,9 @@ function AppContent() {
                   <Routes>
                     <Route path="/" element={<Dashboard />} />
                     <Route path="/students" element={<Students />} />
-                    <Route path="/students/:id" element={<StudentDetail />} />
+<Route path="/students/:id" element={<StudentDetail />} />
                     <Route path="/classes" element={<Classes />} />
+                    <Route path="/departments" element={<Departments />} />
                     <Route path="/grades" element={<Grades />} />
                     <Route path="/attendance" element={<Attendance />} />
                     <Route path="/reports" element={<Reports />} />
