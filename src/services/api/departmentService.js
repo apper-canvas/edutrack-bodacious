@@ -13,14 +13,14 @@ class DepartmentService {
     try {
       const params = {
         fields: [
-          {"field": {"Name": "Id"}},
-          {"field": {"Name": "name"}},
-          {"field": {"Name": "description"}},
-          {"field": {"Name": "headOfDepartment"}},
-          {"field": {"Name": "email"}},
-          {"field": {"Name": "phone"}},
-          {"field": {"Name": "budget"}},
-          {"field": {"Name": "status"}}
+{"field": {"Name": "Id"}},
+          {"field": {"Name": "Name_c"}},
+          {"field": {"Name": "Description_c"}},
+          {"field": {"Name": "Head_of_Department_c"}},
+          {"field": {"Name": "Email_c"}},
+          {"field": {"Name": "Phone_c"}},
+          {"field": {"Name": "Budget_c"}},
+          {"field": {"Name": "Status_c"}}
         ],
         orderBy: [{"fieldName": "name", "sorttype": "ASC"}],
         pagingInfo: {"limit": 100, "offset": 0}
@@ -44,14 +44,14 @@ class DepartmentService {
     try {
       const params = {
         fields: [
-          {"field": {"Name": "Id"}},
-          {"field": {"Name": "name"}},
-          {"field": {"Name": "description"}},
-          {"field": {"Name": "headOfDepartment"}},
-          {"field": {"Name": "email"}},
-          {"field": {"Name": "phone"}},
-          {"field": {"Name": "budget"}},
-          {"field": {"Name": "status"}}
+{"field": {"Name": "Id"}},
+          {"field": {"Name": "Name_c"}},
+          {"field": {"Name": "Description_c"}},
+          {"field": {"Name": "Head_of_Department_c"}},
+          {"field": {"Name": "Email_c"}},
+          {"field": {"Name": "Phone_c"}},
+          {"field": {"Name": "Budget_c"}},
+          {"field": {"Name": "Status_c"}}
         ]
       };
 
@@ -73,13 +73,13 @@ class DepartmentService {
       // Only include updateable fields
       const payload = {
         records: [{
-          name: departmentData.name,
-          description: departmentData.description || '',
-          headOfDepartment: departmentData.headOfDepartment || '',
-          email: departmentData.email || '',
-          phone: departmentData.phone || '',
-          budget: departmentData.budget ? parseFloat(departmentData.budget) : null,
-          status: departmentData.status || 'Active'
+Name_c: departmentData.name,
+          Description_c: departmentData.description || '',
+          Head_of_Department_c: departmentData.headOfDepartment || '',
+          Email_c: departmentData.email || '',
+          Phone_c: departmentData.phone || '',
+          Budget_c: departmentData.budget ? parseFloat(departmentData.budget) : null,
+          Status_c: departmentData.status || 'Active'
         }]
       };
 
@@ -115,13 +115,13 @@ class DepartmentService {
       const payload = {
         records: [{
           Id: parseInt(id),
-          name: departmentData.name,
-          description: departmentData.description || '',
-          headOfDepartment: departmentData.headOfDepartment || '',
-          email: departmentData.email || '',
-          phone: departmentData.phone || '',
-          budget: departmentData.budget ? parseFloat(departmentData.budget) : null,
-          status: departmentData.status || 'Active'
+Name_c: departmentData.name,
+          Description_c: departmentData.description || '',
+          Head_of_Department_c: departmentData.headOfDepartment || '',
+          Email_c: departmentData.email || '',
+          Phone_c: departmentData.phone || '',
+          Budget_c: departmentData.budget ? parseFloat(departmentData.budget) : null,
+          Status_c: departmentData.status || 'Active'
         }]
       };
 
