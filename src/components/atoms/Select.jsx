@@ -5,8 +5,10 @@ const Select = forwardRef(({
   className, 
   children,
   error = false,
+  label,
   ...props 
 }, ref) => {
+  const selectId = React.useId();
   const baseStyles = "w-full px-3 py-2 text-sm border rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed bg-white appearance-none";
   
   const variants = {
@@ -14,19 +16,30 @@ const Select = forwardRef(({
     error: "border-error focus:border-error focus:ring-error/20"
   };
   
-  return (
-    <div className="relative">
-      <select
-        className={cn(baseStyles, error ? variants.error : variants.default, className)}
-        ref={ref}
-        {...props}
-      >
-        {children}
-      </select>
-      <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-        <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
+return (
+    <div className="space-y-2">
+      {label && (
+        <label 
+          htmlFor={selectId}
+          className="block text-sm font-medium text-gray-700"
+        >
+          {label}
+        </label>
+      )}
+      <div className="relative">
+        <select
+          id={selectId}
+          className={cn(baseStyles, error ? variants.error : variants.default, className)}
+          ref={ref}
+          {...props}
+        >
+          {children}
+        </select>
+        <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
+          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
       </div>
     </div>
   );
