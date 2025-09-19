@@ -13,6 +13,7 @@ import Callback from "@/components/pages/Callback";
 import Signup from "@/components/pages/Signup";
 import Dashboard from "@/components/pages/Dashboard";
 import Classes from "@/components/pages/Classes";
+import Assignments from "@/components/pages/Assignments";
 import Departments from "@/components/pages/Departments";
 import Login from "@/components/pages/Login";
 import ErrorPage from "@/components/pages/ErrorPage";
@@ -169,6 +170,7 @@ function AppContent() {
                     <Route path="/students" element={<Students />} />
 <Route path="/students/:id" element={<StudentDetail />} />
                     <Route path="/classes" element={<Classes />} />
+                    <Route path="/assignments" element={<Assignments />} />
                     <Route path="/departments" element={<Departments />} />
                     <Route path="/grades" element={<Grades />} />
                     <Route path="/attendance" element={<Attendance />} />
