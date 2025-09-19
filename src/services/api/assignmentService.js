@@ -189,12 +189,11 @@ if (failed.length > 0) {
           });
         }
 
-        if (successful.length > 0) {
-        if (successful.length > 0) {
+if (successful.length > 0) {
           toast.success("Assignment created successfully!");
           return successful[0].data;
         }
-      }
+}
 
       throw new Error("No assignment created");
     } catch (error) {
