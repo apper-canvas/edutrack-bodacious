@@ -1,7 +1,7 @@
 import React from "react";
-import { cn } from "@/utils/cn";
 import Input from "@/components/atoms/Input";
 import Select from "@/components/atoms/Select";
+import { cn } from "@/utils/cn";
 
 const FormField = ({ 
   label, 
@@ -21,11 +21,9 @@ const FormField = ({
           {required && <span className="text-error ml-1">*</span>}
         </label>
       )}
-      
-      {type === "input" && (
+{type === "input" && (
         <Input error={!!error} {...props} />
       )}
-      
       {type === "select" && (
         <Select error={!!error} {...props}>
           {children}
