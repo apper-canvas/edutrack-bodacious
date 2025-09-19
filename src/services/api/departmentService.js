@@ -12,15 +12,15 @@ class DepartmentService {
   async getAll() {
     try {
       const params = {
-        fields: [
+fields: [
 {"field": {"Name": "Id"}},
-          {"field": {"Name": "Name_c"}},
-          {"field": {"Name": "Description_c"}},
-          {"field": {"Name": "Head_of_Department_c"}},
-          {"field": {"Name": "Email_c"}},
-          {"field": {"Name": "Phone_c"}},
-          {"field": {"Name": "Budget_c"}},
-          {"field": {"Name": "Status_c"}}
+          {"field": {"Name": "name_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "head_of_department_c"}},
+          {"field": {"Name": "email_c"}},
+          {"field": {"Name": "phone_c"}},
+          {"field": {"Name": "budget_c"}},
+          {"field": {"Name": "status_c"}}
         ],
         orderBy: [{"fieldName": "name", "sorttype": "ASC"}],
         pagingInfo: {"limit": 100, "offset": 0}
@@ -45,13 +45,13 @@ class DepartmentService {
       const params = {
         fields: [
 {"field": {"Name": "Id"}},
-          {"field": {"Name": "Name_c"}},
-          {"field": {"Name": "Description_c"}},
-          {"field": {"Name": "Head_of_Department_c"}},
-          {"field": {"Name": "Email_c"}},
-          {"field": {"Name": "Phone_c"}},
-          {"field": {"Name": "Budget_c"}},
-          {"field": {"Name": "Status_c"}}
+          {"field": {"Name": "name_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "head_of_department_c"}},
+          {"field": {"Name": "email_c"}},
+          {"field": {"Name": "phone_c"}},
+          {"field": {"Name": "budget_c"}},
+          {"field": {"Name": "status_c"}}
         ]
       };
 
@@ -73,13 +73,13 @@ class DepartmentService {
       // Only include updateable fields
       const payload = {
         records: [{
-Name_c: departmentData.name,
-          Description_c: departmentData.description || '',
-          Head_of_Department_c: departmentData.headOfDepartment || '',
-          Email_c: departmentData.email || '',
-          Phone_c: departmentData.phone || '',
-          Budget_c: departmentData.budget ? parseFloat(departmentData.budget) : null,
-          Status_c: departmentData.status || 'Active'
+name_c: departmentData.name,
+          description_c: departmentData.description || '',
+          head_of_department_c: departmentData.headOfDepartment || '',
+          email_c: departmentData.email || '',
+          phone_c: departmentData.phone || '',
+          budget_c: departmentData.budget ? parseFloat(departmentData.budget) : null,
+          status_c: departmentData.status || 'Active'
         }]
       };
 
@@ -115,13 +115,13 @@ Name_c: departmentData.name,
       const payload = {
         records: [{
           Id: parseInt(id),
-Name_c: departmentData.name,
-          Description_c: departmentData.description || '',
-          Head_of_Department_c: departmentData.headOfDepartment || '',
-          Email_c: departmentData.email || '',
-          Phone_c: departmentData.phone || '',
-          Budget_c: departmentData.budget ? parseFloat(departmentData.budget) : null,
-          Status_c: departmentData.status || 'Active'
+name_c: departmentData.name,
+          description_c: departmentData.description || '',
+          head_of_department_c: departmentData.headOfDepartment || '',
+          email_c: departmentData.email || '',
+          phone_c: departmentData.phone || '',
+          budget_c: departmentData.budget ? parseFloat(departmentData.budget) : null,
+          status_c: departmentData.status || 'Active'
         }]
       };
 
