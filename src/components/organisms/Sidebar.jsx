@@ -10,7 +10,6 @@ const Sidebar = ({ isOpen, onClose }) => {
 { name: "Dashboard", href: "/", icon: "LayoutDashboard" },
     { name: "Students", href: "/students", icon: "Users" },
     { name: "Classes", href: "/classes", icon: "BookOpen" },
-    { name: "Departments", href: "/departments", icon: "Building" },
     { name: "Grades", href: "/grades", icon: "GraduationCap" },
     { name: "Attendance", href: "/attendance", icon: "Calendar" },
     { name: "Reports", href: "/reports", icon: "BarChart3" }

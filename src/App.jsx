@@ -18,7 +18,6 @@ import ErrorPage from "@/components/pages/ErrorPage";
 import Reports from "@/components/pages/Reports";
 import Attendance from "@/components/pages/Attendance";
 import Students from "@/components/pages/Students";
-import Departments from "@/components/pages/Departments";
 import { clearUser, setUser } from "@/store/userSlice";
 
 // Create auth context
@@ -172,7 +171,6 @@ function AppContent() {
                     <Route path="/classes" element={<Classes />} />
                     <Route path="/grades" element={<Grades />} />
                     <Route path="/attendance" element={<Attendance />} />
-<Route path="/departments" element={<Departments />} />
                     <Route path="/reports" element={<Reports />} />
                   </Routes>
                 </main>
