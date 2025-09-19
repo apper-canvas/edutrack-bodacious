@@ -357,11 +357,12 @@ async delete(id) {
     } catch (error) {
       console.error("Error deleting department:", error?.response?.data?.message || error);
       toast.error("Failed to delete department");
-      return false;
+return false;
     }
+  }
 
   // Helper method for realistic API simulation
-  delay(ms) {
+  async delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
