@@ -48,29 +48,29 @@ const Assignments = () => {
     let filtered = [...assignments];
 
     // Search filter
-    if (searchTerm) {
+if (searchTerm) {
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter(assignment => {
-        const title = assignment.title || assignment.Name || "";
-        const subject = assignment.subject || "";
-        const description = assignment.description || "";
+        const title = assignment.title_c || assignment.Name || "";
+        const tags = assignment.Tags || "";
+        const description = assignment.description_c || "";
         return title.toLowerCase().includes(term) ||
-               subject.toLowerCase().includes(term) ||
+               tags.toLowerCase().includes(term) ||
                description.toLowerCase().includes(term);
       });
     }
 
     // Status filter
     if (statusFilter !== "all") {
-      filtered = filtered.filter(assignment => 
-        assignment.status.toLowerCase() === statusFilter.toLowerCase()
+filtered = filtered.filter(assignment => 
+        (assignment.status_c || "").toLowerCase() === statusFilter.toLowerCase()
       );
     }
 
-    // Subject filter
+    // Subject filter - using Tags field since assignments_c doesn't have subject field
     if (subjectFilter !== "all") {
       filtered = filtered.filter(assignment => 
-        assignment.subject.toLowerCase() === subjectFilter.toLowerCase()
+        (assignment.Tags || "").toLowerCase().includes(subjectFilter.toLowerCase())
       );
     }
 
@@ -97,9 +97,9 @@ const Assignments = () => {
     }
   };
 
-  const isOverdue = (dueDate, status) => {
+const isOverdue = (dueDate, status) => {
     const today = new Date().toISOString().split('T')[0];
-    return dueDate < today && status.toLowerCase() !== 'completed';
+    return dueDate < today && (status || "").toLowerCase() !== 'completed';
   };
 
   const formatDueDate = (dueDate) => {
@@ -119,9 +119,9 @@ const Assignments = () => {
     }
   };
 
-  // Get unique subjects and statuses for filters
-  const subjects = [...new Set(assignments.map(a => a.subject).filter(Boolean))];
-  const statuses = [...new Set(assignments.map(a => a.status).filter(Boolean))];
+// Get unique subjects and statuses for filters
+  const subjects = [...new Set(assignments.map(a => a.Tags).filter(Boolean))];
+  const statuses = [...new Set(assignments.map(a => a.status_c).filter(Boolean))];
 
   if (loading) {
     return (
@@ -224,7 +224,7 @@ const Assignments = () => {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredAssignments.map((assignment) => (
-                <Card 
+<Card 
                   key={assignment.Id} 
                   hover 
                   className="p-6 cursor-pointer" 
@@ -234,39 +234,39 @@ const Assignments = () => {
                     <div className="flex items-center space-x-3">
                       <ApperIcon name="FileText" className="h-8 w-8 text-primary" />
                       <Badge 
-                        variant={getStatusBadgeVariant(assignment.status)} 
+                        variant={getStatusBadgeVariant(assignment.status_c)} 
                         size="sm"
                       >
-                        {assignment.status}
+                        {assignment.status_c || 'Not Started'}
                       </Badge>
                     </div>
-                    {assignment.totalPoints && (
+                    {assignment.priority_c && (
                       <div className="text-sm font-medium text-gray-500">
-                        {assignment.totalPoints} pts
+                        {assignment.priority_c} Priority
                       </div>
                     )}
                   </div>
                   
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
-                    {assignment.title || assignment.Name}
+                    {assignment.title_c || assignment.Name}
                   </h3>
                   
                   <p className="text-primary font-medium mb-2">
-                    {assignment.subject}
+                    {assignment.Tags}
                   </p>
                   
                   <p className="text-gray-600 mb-4 line-clamp-3">
-                    {assignment.description}
+                    {assignment.description_c}
                   </p>
                   
                   <div className="space-y-2 text-sm">
-                    <div className={`flex items-center ${isOverdue(assignment.dueDate, assignment.status) ? 'text-red-600 font-medium' : 'text-gray-500'}`}>
+                    <div className={`flex items-center ${isOverdue(assignment.due_date_c, assignment.status_c) ? 'text-red-600 font-medium' : 'text-gray-500'}`}>
                       <ApperIcon name="Calendar" className="h-4 w-4 mr-2" />
-                      {formatDueDate(assignment.dueDate)}
+                      {formatDueDate(assignment.due_date_c)}
                     </div>
                     <div className="flex items-center text-gray-500">
                       <ApperIcon name="Clock" className="h-4 w-4 mr-2" />
-                      Created {new Date(assignment.createdDate).toLocaleDateString()}
+                      Created {assignment.CreatedOn ? new Date(assignment.CreatedOn).toLocaleDateString() : 'N/A'}
                     </div>
                   </div>
                 </Card>

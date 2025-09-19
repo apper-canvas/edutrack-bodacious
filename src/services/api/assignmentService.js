@@ -1,173 +1,96 @@
 import { toast } from 'react-toastify';
 
-// Mock data for assignments since assignment table is not available in database
-const mockAssignments = [
-  {
-    Id: 1,
-    Name: "Quadratic Equations Homework",
-    title: "Quadratic Equations Homework",
-    subject: "Mathematics",
-    description: "Complete exercises 1-20 from Chapter 5 on solving quadratic equations using various methods.",
-    dueDate: "2024-02-15",
-    status: "Pending",
-    totalPoints: 100,
-    instructions: "Show all work and explain your reasoning for each problem.",
-    classId: 1,
-    teacherId: 1,
-    createdDate: "2024-01-28"
-  },
-  {
-    Id: 2,
-    Name: "Chemical Reactions Lab Report",
-    title: "Chemical Reactions Lab Report",
-    subject: "Chemistry", 
-    description: "Write a detailed report on the chemical reactions observed during the acid-base neutralization experiment.",
-    dueDate: "2024-02-12",
-    status: "Pending",
-    totalPoints: 80,
-    instructions: "Include hypothesis, methodology, observations, and conclusions. Minimum 5 pages.",
-    classId: 2,
-    teacherId: 2,
-    createdDate: "2024-01-25"
-  },
-  {
-    Id: 3,
-    Name: "Shakespeare Essay",
-    title: "Shakespeare Essay Analysis",
-    subject: "English Literature",
-    description: "Analyze the themes of power and corruption in Macbeth with specific textual evidence.",
-    dueDate: "2024-02-20",
-    status: "Pending", 
-    totalPoints: 120,
-    instructions: "5-7 pages, MLA format, minimum 5 scholarly sources required.",
-    classId: 3,
-    teacherId: 3,
-    createdDate: "2024-01-30"
-  },
-  {
-    Id: 4,
-    Name: "World War II Timeline",
-    title: "WWII Historical Timeline Project",
-    subject: "History",
-    description: "Create a comprehensive timeline of major World War II events from 1939-1945.",
-    dueDate: "2024-02-08",
-    status: "Overdue",
-    totalPoints: 90,
-    instructions: "Include at least 20 major events with dates, descriptions, and historical significance.",
-    classId: 4,
-    teacherId: 4,
-    createdDate: "2024-01-20"
-  },
-  {
-    Id: 5,
-    Name: "Photosynthesis Research",
-    title: "Photosynthesis Process Research",
-    subject: "Biology",
-    description: "Research and present the detailed process of photosynthesis in plant cells.",
-    dueDate: "2024-01-30",
-    status: "Completed",
-    totalPoints: 75,
-    instructions: "Create a visual presentation with diagrams showing light and dark reactions.",
-    classId: 5,
-    teacherId: 5,
-    createdDate: "2024-01-15"
-  },
-  {
-    Id: 6,
-    Name: "Geometric Proofs Practice",
-    title: "Triangle Congruence Proofs",
-    subject: "Geometry",
-    description: "Complete 15 geometric proofs demonstrating triangle congruence using SSS, SAS, and ASA methods.",
-    dueDate: "2024-02-18",
-    status: "Pending",
-    totalPoints: 85,
-    instructions: "Each proof must include given information, statements, and reasons in proper format.",
-    classId: 1,
-    teacherId: 1,
-    createdDate: "2024-02-01"
-  },
-  {
-    Id: 7,
-    Name: "Poetry Analysis Collection",
-    title: "Modern Poetry Analysis",
-    subject: "English Literature",
-    description: "Analyze 5 different modern poems focusing on literary devices and themes.",
-    dueDate: "2024-02-14",
-    status: "Pending",
-    totalPoints: 95,
-    instructions: "Include meter, rhyme scheme, imagery, and thematic analysis for each poem.",
-    classId: 3,
-    teacherId: 3,
-    createdDate: "2024-01-28"
-  },
-  {
-    Id: 8,
-    Name: "Physics Motion Problems",
-    title: "Kinematics Problem Set",
-    subject: "Physics",
-    description: "Solve 25 problems involving motion, velocity, and acceleration calculations.",
-    dueDate: "2024-02-16",
-    status: "Pending",
-    totalPoints: 110,
-    instructions: "Show all calculations, include units, and draw diagrams where applicable.",
-    classId: 6,
-    teacherId: 6,
-    createdDate: "2024-01-29"
-  },
-  {
-    Id: 9,
-    Name: "American Revolution Essay",
-    title: "Causes of American Revolution",
-    subject: "History",
-    description: "Write an analytical essay on the primary causes that led to the American Revolution.",
-    dueDate: "2024-01-25",
-    status: "Completed",
-    totalPoints: 100,
-    instructions: "4-6 pages, cite primary sources, focus on economic and political factors.",
-    classId: 4,
-    teacherId: 4,
-    createdDate: "2024-01-10"
-  },
-  {
-    Id: 10,
-    Name: "Spanish Conversation Video",
-    title: "Spanish Dialogue Recording",
-    subject: "Spanish",
-    description: "Record a 10-minute conversation in Spanish discussing daily routines and hobbies.",
-    dueDate: "2024-02-22",
-    status: "Pending",
-    totalPoints: 70,
-    instructions: "Use at least 15 different verb tenses, submit video file with transcript.",
-    classId: 7,
-    teacherId: 7,
-    createdDate: "2024-02-02"
-  }
-];
-
-// Simulate async delay for realistic API experience
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
 class AssignmentService {
   constructor() {
-    // Mock service implementation - will be replaced with ApperClient when assignment table is available
-    this.assignments = [...mockAssignments];
+    // Initialize ApperClient for database operations
+    const { ApperClient } = window.ApperSDK;
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    });
+    this.tableName = 'assignments_c';
+    
+    // Define updateable fields based on assignments_c table schema
+    this.updateableFields = ['Name', 'Tags', 'title_c', 'description_c', 'due_date_c', 'status_c', 'priority_c'];
+  }
+
+  // Filter data to include only updateable fields
+  filterUpdateableFields(data) {
+    const filtered = {};
+    this.updateableFields.forEach(field => {
+      if (data[field] !== undefined) {
+        filtered[field] = data[field];
+      }
+    });
+    return filtered;
   }
 
   async getAll() {
     try {
-      await delay(300); // Simulate API delay
-      return [...this.assignments].sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "Tags"}},
+          {"field": {"Name": "title_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "due_date_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "priority_c"}},
+          {"field": {"Name": "Owner"}},
+          {"field": {"Name": "CreatedOn"}},
+          {"field": {"Name": "CreatedBy"}},
+          {"field": {"Name": "ModifiedOn"}},
+          {"field": {"Name": "ModifiedBy"}}
+        ],
+        orderBy: [{"fieldName": "CreatedOn", "sorttype": "DESC"}],
+        pagingInfo: {"limit": 100, "offset": 0}
+      };
+
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error("Error fetching assignments:", response.message);
+        toast.error(response.message);
+        return [];
+      }
+
+      return response.data || [];
     } catch (error) {
       console.error("Error fetching assignments:", error?.response?.data?.message || error);
-      throw error;
+      toast.error("Failed to load assignments");
+      return [];
     }
   }
 
   async getById(id) {
     try {
-      await delay(250);
-      const assignment = this.assignments.find(a => a.Id === parseInt(id));
-      return assignment ? { ...assignment } : null;
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "Tags"}},
+          {"field": {"Name": "title_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "due_date_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "priority_c"}},
+          {"field": {"Name": "Owner"}},
+          {"field": {"Name": "CreatedOn"}},
+          {"field": {"Name": "CreatedBy"}},
+          {"field": {"Name": "ModifiedOn"}},
+          {"field": {"Name": "ModifiedBy"}}
+        ]
+      };
+
+      const response = await this.apperClient.getRecordById(this.tableName, parseInt(id), params);
+      
+      if (!response.success) {
+        console.error(`Error fetching assignment ${id}:`, response.message);
+        return null;
+      }
+
+      return response.data;
     } catch (error) {
       console.error(`Error fetching assignment ${id}:`, error?.response?.data?.message || error);
       return null;
@@ -176,11 +99,30 @@ class AssignmentService {
 
   async getByClassId(classId) {
     try {
-      await delay(300);
-      return this.assignments
-        .filter(a => a.classId === parseInt(classId))
-        .map(a => ({ ...a }))
-        .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "Tags"}},
+          {"field": {"Name": "title_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "due_date_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "priority_c"}}
+        ],
+        where: [{"FieldName": "class_id_c", "Operator": "EqualTo", "Values": [parseInt(classId)]}],
+        orderBy: [{"fieldName": "due_date_c", "sorttype": "ASC"}],
+        pagingInfo: {"limit": 50, "offset": 0}
+      };
+
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error(`Error fetching assignments for class ${classId}:`, response.message);
+        return [];
+      }
+
+      return response.data || [];
     } catch (error) {
       console.error(`Error fetching assignments for class ${classId}:`, error?.response?.data?.message || error);
       return [];
@@ -189,26 +131,52 @@ class AssignmentService {
 
   async create(assignmentData) {
     try {
-      await delay(400);
-      const newId = Math.max(...this.assignments.map(a => a.Id), 0) + 1;
-      const newAssignment = {
-        Id: newId,
-        Name: assignmentData.title || assignmentData.Name,
-        title: assignmentData.title,
-        subject: assignmentData.subject,
-        description: assignmentData.description,
-        dueDate: assignmentData.dueDate,
-        status: assignmentData.status || "Pending",
-        totalPoints: parseInt(assignmentData.totalPoints) || 100,
-        instructions: assignmentData.instructions || "",
-        classId: parseInt(assignmentData.classId),
-        teacherId: parseInt(assignmentData.teacherId),
-        createdDate: new Date().toISOString().split('T')[0]
+      // Map input data to database field names and filter updateable fields
+      const mappedData = {
+        Name: assignmentData.Name || assignmentData.title,
+        title_c: assignmentData.title || assignmentData.title_c,
+        description_c: assignmentData.description || assignmentData.description_c,
+        due_date_c: assignmentData.dueDate || assignmentData.due_date_c,
+        status_c: assignmentData.status || assignmentData.status_c || "Not Started",
+        priority_c: assignmentData.priority || assignmentData.priority_c || "Medium",
+        Tags: assignmentData.Tags || ""
       };
+
+      const filteredData = this.filterUpdateableFields(mappedData);
+
+      const params = {
+        records: [filteredData]
+      };
+
+      const response = await this.apperClient.createRecord(this.tableName, params);
       
-      this.assignments.push(newAssignment);
-      toast.success("Assignment created successfully!");
-      return { ...newAssignment };
+      if (!response.success) {
+        console.error("Error creating assignment:", response.message);
+        toast.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to create ${failed.length} assignments:`, JSON.stringify(failed));
+          failed.forEach(record => {
+            if (record.errors) {
+              record.errors.forEach(error => toast.error(`${error.fieldLabel}: ${error}`));
+            }
+            if (record.message) toast.error(record.message);
+          });
+        }
+
+        if (successful.length > 0) {
+          toast.success("Assignment created successfully!");
+          return successful[0].data;
+        }
+      }
+
+      throw new Error("No assignment created");
     } catch (error) {
       console.error("Error creating assignment:", error?.response?.data?.message || error);
       toast.error("Failed to create assignment");
@@ -218,29 +186,54 @@ class AssignmentService {
 
   async update(id, assignmentData) {
     try {
-      await delay(350);
-      const index = this.assignments.findIndex(a => a.Id === parseInt(id));
-      if (index === -1) {
-        throw new Error("Assignment not found");
-      }
-
-      const updatedAssignment = {
-        ...this.assignments[index],
-        Name: assignmentData.title || assignmentData.Name,
-        title: assignmentData.title,
-        subject: assignmentData.subject,
-        description: assignmentData.description,
-        dueDate: assignmentData.dueDate,
-        status: assignmentData.status,
-        totalPoints: parseInt(assignmentData.totalPoints),
-        instructions: assignmentData.instructions,
-        classId: parseInt(assignmentData.classId),
-        teacherId: parseInt(assignmentData.teacherId)
+      // Map input data to database field names and filter updateable fields
+      const mappedData = {
+        Id: parseInt(id),
+        Name: assignmentData.Name || assignmentData.title,
+        title_c: assignmentData.title || assignmentData.title_c,
+        description_c: assignmentData.description || assignmentData.description_c,
+        due_date_c: assignmentData.dueDate || assignmentData.due_date_c,
+        status_c: assignmentData.status || assignmentData.status_c,
+        priority_c: assignmentData.priority || assignmentData.priority_c,
+        Tags: assignmentData.Tags || ""
       };
 
-      this.assignments[index] = updatedAssignment;
-      toast.success("Assignment updated successfully!");
-      return { ...updatedAssignment };
+      const filteredData = this.filterUpdateableFields(mappedData);
+      filteredData.Id = parseInt(id); // Always include ID for updates
+
+      const params = {
+        records: [filteredData]
+      };
+
+      const response = await this.apperClient.updateRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error("Error updating assignment:", response.message);
+        toast.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to update ${failed.length} assignments:`, JSON.stringify(failed));
+          failed.forEach(record => {
+            if (record.errors) {
+              record.errors.forEach(error => toast.error(`${error.fieldLabel}: ${error}`));
+            }
+            if (record.message) toast.error(record.message);
+          });
+        }
+
+        if (successful.length > 0) {
+          toast.success("Assignment updated successfully!");
+          return successful[0].data;
+        }
+      }
+
+      throw new Error("Assignment not updated");
     } catch (error) {
       console.error("Error updating assignment:", error?.response?.data?.message || error);
       toast.error("Failed to update assignment");
@@ -250,15 +243,36 @@ class AssignmentService {
 
   async delete(id) {
     try {
-      await delay(300);
-      const index = this.assignments.findIndex(a => a.Id === parseInt(id));
-      if (index === -1) {
+      const params = {
+        RecordIds: [parseInt(id)]
+      };
+
+      const response = await this.apperClient.deleteRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error("Error deleting assignment:", response.message);
+        toast.error(response.message);
         return false;
       }
 
-      this.assignments.splice(index, 1);
-      toast.success("Assignment deleted successfully!");
-      return true;
+      if (response.results) {
+        const successful = response.results.filter(r => r.success);
+        const failed = response.results.filter(r => !r.success);
+        
+        if (failed.length > 0) {
+          console.error(`Failed to delete ${failed.length} assignments:`, JSON.stringify(failed));
+          failed.forEach(record => {
+            if (record.message) toast.error(record.message);
+          });
+        }
+
+        if (successful.length > 0) {
+          toast.success("Assignment deleted successfully!");
+          return true;
+        }
+      }
+
+      return false;
     } catch (error) {
       console.error("Error deleting assignment:", error?.response?.data?.message || error);
       toast.error("Failed to delete assignment");
@@ -268,11 +282,34 @@ class AssignmentService {
 
   async getOverdueAssignments() {
     try {
-      await delay(250);
       const today = new Date().toISOString().split('T')[0];
-      return this.assignments
-        .filter(a => a.dueDate < today && a.status !== "Completed")
-        .map(a => ({ ...a }));
+      
+      const params = {
+        fields: [
+          {"field": {"Name": "Id"}},
+          {"field": {"Name": "Name"}},
+          {"field": {"Name": "title_c"}},
+          {"field": {"Name": "description_c"}},
+          {"field": {"Name": "due_date_c"}},
+          {"field": {"Name": "status_c"}},
+          {"field": {"Name": "priority_c"}}
+        ],
+        where: [
+          {"FieldName": "due_date_c", "Operator": "LessThan", "Values": [today]},
+          {"FieldName": "status_c", "Operator": "NotEqualTo", "Values": ["Completed"]}
+        ],
+        orderBy: [{"fieldName": "due_date_c", "sorttype": "ASC"}],
+        pagingInfo: {"limit": 50, "offset": 0}
+      };
+
+      const response = await this.apperClient.fetchRecords(this.tableName, params);
+      
+      if (!response.success) {
+        console.error("Error fetching overdue assignments:", response.message);
+        return [];
+      }
+
+      return response.data || [];
     } catch (error) {
       console.error("Error fetching overdue assignments:", error?.response?.data?.message || error);
       return [];
@@ -281,15 +318,27 @@ class AssignmentService {
 
   async updateStatus(id, status) {
     try {
-      await delay(200);
-      const index = this.assignments.findIndex(a => a.Id === parseInt(id));
-      if (index === -1) {
-        throw new Error("Assignment not found");
+      const params = {
+        records: [{
+          Id: parseInt(id),
+          status_c: status
+        }]
+      };
+
+      const response = await this.apperClient.updateRecord(this.tableName, params);
+      
+      if (!response.success) {
+        console.error("Error updating assignment status:", response.message);
+        toast.error(response.message);
+        throw new Error(response.message);
       }
 
-      this.assignments[index].status = status;
-      toast.success(`Assignment status updated to ${status}!`);
-      return { ...this.assignments[index] };
+      if (response.results && response.results[0]?.success) {
+        toast.success(`Assignment status updated to ${status}!`);
+        return response.results[0].data;
+      }
+
+      throw new Error("Status not updated");
     } catch (error) {
       console.error("Error updating assignment status:", error?.response?.data?.message || error);
       toast.error("Failed to update assignment status");
