@@ -14,11 +14,12 @@ const Input = forwardRef(({
   const variants = {
     default: "border-gray-300 focus:border-primary focus:ring-primary/20",
     error: "border-error focus:border-error focus:ring-error/20"
-  };
+};
   
   return (
-{multiline ? (
-      <textarea
+    <>
+      {multiline ? (
+        <textarea
         rows={rows}
         className={cn(baseStyles, error ? variants.error : variants.default, className)}
         ref={ref}
@@ -29,9 +30,10 @@ const Input = forwardRef(({
         type={type}
         className={cn(baseStyles, error ? variants.error : variants.default, className)}
         ref={ref}
-        {...props}
+{...props}
       />
     )}
+    </>
   );
 });
 
