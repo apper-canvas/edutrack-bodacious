@@ -44,9 +44,9 @@ const Classes = () => {
   const filterClasses = () => {
     let filtered = [...classes];
 
-    if (searchTerm) {
+if (searchTerm) {
       const term = searchTerm.toLowerCase();
-filtered = filtered.filter(classItem => {
+      filtered = filtered.filter(classItem => {
         const name = classItem.name_c || classItem.name || "";
         const subject = classItem.subject_c || classItem.subject || "";
         const teacher = classItem.teacher_c || classItem.teacher || "";
@@ -54,9 +54,7 @@ filtered = filtered.filter(classItem => {
                subject.toLowerCase().includes(term) ||
                teacher.toLowerCase().includes(term);
       });
-      );
     }
-
     setFilteredClasses(filtered);
   };
 

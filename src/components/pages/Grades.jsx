@@ -76,13 +76,11 @@ filtered = filtered.filter(grade => {
       });
     }
     
-    if (periodFilter !== "all") {
+if (periodFilter !== "all") {
       filtered = filtered.filter(grade => {
         const gradingPeriod = grade.grading_period_c || grade.gradingPeriod || "";
         return gradingPeriod.toLowerCase() === periodFilter.toLowerCase();
       });
-        grade.gradingPeriod.toLowerCase() === periodFilter.toLowerCase()
-      );
     }
 
     setFilteredGrades(filtered);

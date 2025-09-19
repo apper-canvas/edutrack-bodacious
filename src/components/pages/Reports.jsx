@@ -101,14 +101,19 @@ const grades = reportData.grades.filter(g =>
     return distribution;
   };
 
-  // Calculate statistics
+// Calculate statistics
   const getStatistics = () => {
     const totalStudents = reportData.students.length;
-const activeStudents = reportData.students.filter(s => 
+    const activeStudents = reportData.students.filter(s => 
       (s.status_c || s.status) === "Active"
     ).length;
+    
     // Recent attendance (last 7 days)
-const recentAttendance = reportData.attendance.filter(record => {
+    const days = selectedPeriod === "week" ? 7 : selectedPeriod === "month" ? 30 : 90;
+    const startDate = subDays(new Date(), days);
+    const endDate = new Date();
+    
+    const recentAttendance = reportData.attendance.filter(record => {
       const recordDate = new Date(record.date_c || record.date);
       return recordDate >= startDate && recordDate <= endDate;
     });
@@ -128,7 +133,6 @@ const recentAttendance = reportData.attendance.filter(record => {
           const maxPoints = g.max_points_c || g.maxPoints;
           return sum + (grade / maxPoints * 100);
         }, 0) / validGrades.length)
-      ? Math.round(validGrades.reduce((sum, g) => sum + (g.grade / g.maxPoints * 100), 0) / validGrades.length)
       : 0;
     
     return {

@@ -4,10 +4,6 @@ import { AuthContext } from "@/App";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 import { cn } from "@/utils/cn";
-import { cn } from "@/services/mockData/grades.json";
-import { cn } from "@/services/mockData/students.json";
-import { cn } from "@/services/mockData/classes.json";
-import { cn } from "@/services/mockData/attendance.json";
 
 const Header = ({ title, onMenuClick, actions, className }) => {
   const { logout } = useContext(AuthContext);
@@ -67,7 +63,3 @@ const Header = ({ title, onMenuClick, actions, className }) => {
 };
 
 export default Header;
-      </div>
-    </header>
-  );
-};
