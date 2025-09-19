@@ -43,9 +43,13 @@ const AssignmentForm = ({ assignment, onSuccess, onCancel, isEditing = false }) 
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+// Handle date formatting for due_date_c field
+    const processedValue = name === 'due_date_c' && value ? 
+      new Date(value).toISOString().split('T')[0] : value;
+      
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: processedValue
     }));
 
     // Clear error when user starts typing

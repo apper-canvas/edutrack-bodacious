@@ -1,4 +1,24 @@
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
+import React from "react";
+import Error from "@/components/ui/Error";
+
+// Utility function to format dates for API
+const formatDateForAPI = (dateValue) => {
+  if (!dateValue) return null;
+  
+  // If already in ISO format, return as is
+  if (typeof dateValue === 'string' && dateValue.match(/^\d{4}-\d{2}-\d{2}$/)) {
+    return dateValue;
+  }
+  
+  // Convert to ISO date format (YYYY-MM-DD)
+  try {
+    return new Date(dateValue).toISOString().split('T')[0];
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return null;
+  }
+};
 
 class AssignmentService {
   constructor() {
@@ -129,14 +149,14 @@ class AssignmentService {
     }
   }
 
-  async create(assignmentData) {
+async create(assignmentData) {
     try {
       // Map input data to database field names and filter updateable fields
       const mappedData = {
         Name: assignmentData.Name || assignmentData.title,
         title_c: assignmentData.title || assignmentData.title_c,
         description_c: assignmentData.description || assignmentData.description_c,
-        due_date_c: assignmentData.dueDate || assignmentData.due_date_c,
+        due_date_c: formatDateForAPI(assignmentData.dueDate || assignmentData.due_date_c),
         status_c: assignmentData.status || assignmentData.status_c || "Not Started",
         priority_c: assignmentData.priority || assignmentData.priority_c || "Medium",
         Tags: assignmentData.Tags || ""
@@ -159,17 +179,17 @@ class AssignmentService {
       if (response.results) {
         const successful = response.results.filter(r => r.success);
         const failed = response.results.filter(r => !r.success);
-        
-        if (failed.length > 0) {
+if (failed.length > 0) {
           console.error(`Failed to create ${failed.length} assignments:`, JSON.stringify(failed));
           failed.forEach(record => {
             if (record.errors) {
-              record.errors.forEach(error => toast.error(`${error.fieldLabel}: ${error}`));
+              record.errors.forEach(error => toast.error(`${error.fieldLabel}: ${error.message}`));
             }
             if (record.message) toast.error(record.message);
           });
         }
 
+        if (successful.length > 0) {
         if (successful.length > 0) {
           toast.success("Assignment created successfully!");
           return successful[0].data;
@@ -184,7 +204,7 @@ class AssignmentService {
     }
   }
 
-  async update(id, assignmentData) {
+async update(id, assignmentData) {
     try {
       // Map input data to database field names and filter updateable fields
       const mappedData = {
@@ -192,7 +212,7 @@ class AssignmentService {
         Name: assignmentData.Name || assignmentData.title,
         title_c: assignmentData.title || assignmentData.title_c,
         description_c: assignmentData.description || assignmentData.description_c,
-        due_date_c: assignmentData.dueDate || assignmentData.due_date_c,
+        due_date_c: formatDateForAPI(assignmentData.dueDate || assignmentData.due_date_c),
         status_c: assignmentData.status || assignmentData.status_c,
         priority_c: assignmentData.priority || assignmentData.priority_c,
         Tags: assignmentData.Tags || ""
@@ -219,9 +239,9 @@ class AssignmentService {
         
         if (failed.length > 0) {
           console.error(`Failed to update ${failed.length} assignments:`, JSON.stringify(failed));
-          failed.forEach(record => {
+failed.forEach(record => {
             if (record.errors) {
-              record.errors.forEach(error => toast.error(`${error.fieldLabel}: ${error}`));
+              record.errors.forEach(error => toast.error(`${error.fieldLabel}: ${error.message}`));
             }
             if (record.message) toast.error(record.message);
           });
