@@ -1,24 +1,25 @@
 import React, { createContext, useEffect, useState } from "react";
-import { Route, BrowserRouter, Routes, useNavigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useNavigate } from "react-router-dom";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import { store } from "@/store/store";
-import { clearUser, setUser } from "@/store/userSlice";
-import Login from "@/components/pages/Login";
-import Signup from "@/components/pages/Signup";
-import Callback from "@/components/pages/Callback";
-import ErrorPage from "@/components/pages/ErrorPage";
-import ResetPassword from "@/components/pages/ResetPassword";
-import PromptPassword from "@/components/pages/PromptPassword";
 import Sidebar from "@/components/organisms/Sidebar";
 import Header from "@/components/organisms/Header";
 import StudentDetail from "@/components/pages/StudentDetail";
+import PromptPassword from "@/components/pages/PromptPassword";
+import ResetPassword from "@/components/pages/ResetPassword";
 import Grades from "@/components/pages/Grades";
+import Callback from "@/components/pages/Callback";
+import Signup from "@/components/pages/Signup";
 import Dashboard from "@/components/pages/Dashboard";
 import Classes from "@/components/pages/Classes";
+import Login from "@/components/pages/Login";
+import ErrorPage from "@/components/pages/ErrorPage";
 import Reports from "@/components/pages/Reports";
 import Attendance from "@/components/pages/Attendance";
 import Students from "@/components/pages/Students";
+import Departments from "@/components/pages/Departments";
+import { clearUser, setUser } from "@/store/userSlice";
 
 // Create auth context
 export const AuthContext = createContext(null);
@@ -171,6 +172,7 @@ function AppContent() {
                     <Route path="/classes" element={<Classes />} />
                     <Route path="/grades" element={<Grades />} />
                     <Route path="/attendance" element={<Attendance />} />
+<Route path="/departments" element={<Departments />} />
                     <Route path="/reports" element={<Reports />} />
                   </Routes>
                 </main>
