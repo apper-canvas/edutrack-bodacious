@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SearchBar from "@/components/molecules/SearchBar";
-import GradeIndicator from "@/components/molecules/GradeIndicator";
+import ApperIcon from "@/components/ApperIcon";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
 import Select from "@/components/atoms/Select";
-import ApperIcon from "@/components/ApperIcon";
 import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import SearchBar from "@/components/molecules/SearchBar";
+import GradeIndicator from "@/components/molecules/GradeIndicator";
 import gradeService from "@/services/api/gradeService";
 import studentService from "@/services/api/studentService";
 
@@ -57,21 +57,30 @@ const Grades = () => {
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter(grade => {
-        const student = students.find(s => s.Id === grade.studentId);
-        return grade.subject.toLowerCase().includes(term) ||
-               grade.assignment.toLowerCase().includes(term) ||
-               (student && `${student.firstName} ${student.lastName}`.toLowerCase().includes(term));
+const studentId = grade.student_id_c?.Id || grade.student_id_c || grade.studentId;
+        const student = students.find(s => s.Id === studentId);
+        const subject = grade.subject_c || grade.subject || "";
+        const assignment = grade.assignment_c || grade.assignment || "";
+        const studentName = student ? `${student.first_name_c || student.firstName} ${student.last_name_c || student.lastName}` : "";
+        
+        return subject.toLowerCase().includes(term) ||
+               assignment.toLowerCase().includes(term) ||
+               studentName.toLowerCase().includes(term);
       });
     }
 
     if (subjectFilter !== "all") {
-      filtered = filtered.filter(grade => 
-        grade.subject.toLowerCase() === subjectFilter.toLowerCase()
-      );
+filtered = filtered.filter(grade => {
+        const subject = grade.subject_c || grade.subject || "";
+        return subject.toLowerCase() === subjectFilter.toLowerCase();
+      });
     }
-
+    
     if (periodFilter !== "all") {
-      filtered = filtered.filter(grade => 
+      filtered = filtered.filter(grade => {
+        const gradingPeriod = grade.grading_period_c || grade.gradingPeriod || "";
+        return gradingPeriod.toLowerCase() === periodFilter.toLowerCase();
+      });
         grade.gradingPeriod.toLowerCase() === periodFilter.toLowerCase()
       );
     }
@@ -80,8 +89,8 @@ const Grades = () => {
   };
 
   const getStudentName = (studentId) => {
-    const student = students.find(s => s.Id === studentId);
-    return student ? `${student.firstName} ${student.lastName}` : "Unknown Student";
+const student = students.find(s => s.Id === studentId);
+    return student ? `${student.first_name_c || student.firstName} ${student.last_name_c || student.lastName}` : "Unknown Student";
   };
 
   const handleSearchChange = (e) => {
@@ -93,9 +102,8 @@ const Grades = () => {
   };
 
   // Get unique subjects and grading periods for filters
-  const subjects = [...new Set(grades.map(g => g.subject))];
-  const gradingPeriods = [...new Set(grades.map(g => g.gradingPeriod))];
-
+const subjects = [...new Set(grades.map(g => g.subject_c || g.subject).filter(Boolean))];
+  const gradingPeriods = [...new Set(grades.map(g => g.grading_period_c || g.gradingPeriod).filter(Boolean))];
   if (loading) {
     return (
       <div className="p-6 space-y-6">
@@ -220,33 +228,33 @@ const Grades = () => {
                     {filteredGrades.map((grade) => (
                       <tr key={grade.Id} className="hover:bg-gray-50">
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-medium text-gray-900">
-                            {getStudentName(grade.studentId)}
+<div className="text-sm font-medium text-gray-900">
+                            {getStudentName(grade.student_id_c?.Id || grade.student_id_c || grade.studentId)}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {grade.subject}
+                          {grade.subject_c || grade.subject}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {grade.assignment}
+                          {grade.assignment_c || grade.assignment}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <GradeIndicator 
-                            grade={grade.grade} 
-                            maxPoints={grade.maxPoints} 
+                            grade={grade.grade_c || grade.grade} 
+                            maxPoints={grade.max_points_c || grade.maxPoints} 
                           />
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {grade.gradingPeriod}
+                          {grade.grading_period_c || grade.gradingPeriod}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {new Date(grade.dateRecorded).toLocaleDateString()}
+                          {new Date(grade.date_recorded_c || grade.dateRecorded).toLocaleDateString()}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => navigate(`/students/${grade.studentId}`)}
+onClick={() => navigate(`/students/${grade.student_id_c?.Id || grade.student_id_c || grade.studentId}`)}
                           >
                             <ApperIcon name="Eye" className="h-4 w-4" />
                           </Button>

@@ -25,7 +25,16 @@ const AttendanceCalendar = ({ studentId, className }) => {
     
     setLoading(true);
     try {
-      const data = await attendanceService.getByStudentId(studentId);
+const data = await attendanceService.getByStudentId(studentId);
+      // Map database fields to expected format
+      const mappedData = data.map(record => ({
+        Id: record.Id,
+        studentId: record.student_id_c?.Id || record.student_id_c,
+        date: record.date_c,
+        status: record.status_c,
+        notes: record.notes_c,
+        class: record.class_c
+      }));
       setAttendanceRecords(data);
     } catch (error) {
       console.error("Error loading attendance:", error);
@@ -35,8 +44,8 @@ const AttendanceCalendar = ({ studentId, className }) => {
   };
   
   const getAttendanceForDate = (date) => {
-    return attendanceRecords.find(record => 
-      isSameDay(new Date(record.date), date)
+return attendanceRecords.find(record => 
+      isSameDay(new Date(record.date_c || record.date), date)
     );
   };
   
@@ -101,8 +110,8 @@ const AttendanceCalendar = ({ studentId, className }) => {
               
               {attendance && (
                 <div className="mt-1">
-                  <Badge variant={getStatusVariant(attendance.status)} size="xs">
-                    {attendance.status.charAt(0).toUpperCase()}
+<Badge variant={getStatusVariant(attendance.status_c || attendance.status)} size="xs">
+                    {(attendance.status_c || attendance.status).charAt(0).toUpperCase()}
                   </Badge>
                 </div>
               )}

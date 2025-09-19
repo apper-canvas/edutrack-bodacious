@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SearchBar from "@/components/molecules/SearchBar";
+import ApperIcon from "@/components/ApperIcon";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
-import ApperIcon from "@/components/ApperIcon";
 import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import SearchBar from "@/components/molecules/SearchBar";
 import classService from "@/services/api/classService";
 
 const Classes = () => {
@@ -46,10 +46,14 @@ const Classes = () => {
 
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(classItem => 
-        classItem.name.toLowerCase().includes(term) ||
-        classItem.subject.toLowerCase().includes(term) ||
-        classItem.teacher.toLowerCase().includes(term)
+filtered = filtered.filter(classItem => {
+        const name = classItem.name_c || classItem.name || "";
+        const subject = classItem.subject_c || classItem.subject || "";
+        const teacher = classItem.teacher_c || classItem.teacher || "";
+        return name.toLowerCase().includes(term) ||
+               subject.toLowerCase().includes(term) ||
+               teacher.toLowerCase().includes(term);
+      });
       );
     }
 
@@ -134,37 +138,37 @@ const Classes = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredClasses.map((classItem) => (
-                <Card key={classItem.Id} hover className="p-6 cursor-pointer" onClick={() => navigate(`/classes/${classItem.Id}`)}>
+<Card key={classItem.Id} hover className="p-6 cursor-pointer" onClick={() => navigate(`/classes/${classItem.Id}`)}>
                   <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
-                      <ApperIcon name="BookOpen" className="h-6 w-6 text-white" />
+                    <div className="flex items-center space-x-3">
+                      <ApperIcon name="BookOpen" className="h-8 w-8 text-primary" />
+                      <Badge variant="info" size="sm">
+                        {classItem.grade_level_c || classItem.gradeLevel}
+                      </Badge>
                     </div>
-                    <Badge variant="info" size="sm">
-                      {classItem.gradeLevel}
-                    </Badge>
                   </div>
                   
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">
-                    {classItem.name}
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    {classItem.name_c || classItem.name}
                   </h3>
                   
                   <p className="text-gray-600 mb-3">
-                    {classItem.subject}
+                    {classItem.subject_c || classItem.subject}
                   </p>
                   
                   <div className="space-y-2 text-sm text-gray-500">
                     <div className="flex items-center">
                       <ApperIcon name="User" className="h-4 w-4 mr-2" />
-                      {classItem.teacher}
+                      {classItem.teacher_c || classItem.teacher}
                     </div>
                     <div className="flex items-center">
                       <ApperIcon name="Users" className="h-4 w-4 mr-2" />
-                      {classItem.students?.length || 0} students
+                      {(classItem.students_c || classItem.students)?.length || 0} students
                     </div>
-                    {classItem.schedule?.time && (
+                    {(classItem.schedule_time_c || classItem.schedule?.time) && (
                       <div className="flex items-center">
                         <ApperIcon name="Clock" className="h-4 w-4 mr-2" />
-                        {classItem.schedule.time}
+                        {classItem.schedule_time_c || classItem.schedule.time}
                       </div>
                     )}
                   </div>

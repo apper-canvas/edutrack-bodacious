@@ -45,19 +45,25 @@ const Dashboard = () => {
       // Calculate stats
       const totalStudents = studentsData.length;
       const today = new Date().toDateString();
-      const todayAttendance = attendanceData.filter(record => 
-        new Date(record.date).toDateString() === today
+const todayAttendance = attendanceData.filter(record => 
+        new Date(record.date_c || record.date).toDateString() === today
       );
       const presentToday = todayAttendance.filter(record => 
-        record.status.toLowerCase() === "present"
+        (record.status_c || record.status) === "Present"
       ).length;
-
-      const validGrades = gradesData.filter(g => g.grade && g.maxPoints);
+      
+      const validGrades = gradesData.filter(g => 
+        (g.grade_c || g.grade) && (g.max_points_c || g.maxPoints)
+      );
       const averageGrade = validGrades.length > 0 
-        ? Math.round(validGrades.reduce((sum, g) => sum + (g.grade / g.maxPoints * 100), 0) / validGrades.length)
+        ? Math.round(validGrades.reduce((sum, g) => {
+            const grade = g.grade_c || g.grade;
+            const maxPoints = g.max_points_c || g.maxPoints;
+            return sum + (grade / maxPoints * 100);
+          }, 0) / validGrades.length)
         : 0;
 
-      const recentGrades = gradesData
+const recentGrades = gradesData
         .sort((a, b) => new Date(b.dateRecorded) - new Date(a.dateRecorded))
         .slice(0, 5);
 
@@ -172,13 +178,13 @@ const Dashboard = () => {
             {recentActivity.length > 0 ? (
               <div className="space-y-3">
                 {recentActivity.map((activity) => (
-                  <div key={activity.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+<div key={activity.Id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                     <div className="flex-1">
                       <p className="text-sm font-medium text-gray-900">
-                        {activity.subject} - {activity.assignment}
+                        {activity.subject_c || activity.subject} - {activity.assignment_c || activity.assignment}
                       </p>
                       <p className="text-xs text-gray-500">
-                        Grade: {activity.grade}/{activity.maxPoints}
+                        Grade: {activity.grade_c || activity.grade}/{activity.max_points_c || activity.maxPoints}
                       </p>
                     </div>
                     <div className="text-xs text-gray-400">

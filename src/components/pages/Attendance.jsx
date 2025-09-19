@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from "react";
-import { format, startOfWeek, addDays } from "date-fns";
-import SearchBar from "@/components/molecules/SearchBar";
+import React, { useEffect, useState } from "react";
+import { addDays, format, startOfWeek } from "date-fns";
+import { toast } from "react-toastify";
+import ApperIcon from "@/components/ApperIcon";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
 import Badge from "@/components/atoms/Badge";
-import ApperIcon from "@/components/ApperIcon";
+import Select from "@/components/atoms/Select";
 import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import SearchBar from "@/components/molecules/SearchBar";
 import attendanceService from "@/services/api/attendanceService";
 import studentService from "@/services/api/studentService";
-import { toast } from "react-toastify";
 
 const Attendance = () => {
   const [students, setStudents] = useState([]);
@@ -56,20 +57,22 @@ const Attendance = () => {
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       filtered = filtered.filter(student => 
-        student.firstName.toLowerCase().includes(term) ||
-        student.lastName.toLowerCase().includes(term) ||
-        student.studentId.toLowerCase().includes(term)
+(student.first_name_c || student.firstName || "").toLowerCase().includes(term) ||
+        (student.last_name_c || student.lastName || "").toLowerCase().includes(term) ||
+        (student.student_id_c || student.studentId || "").toLowerCase().includes(term)
       );
     }
 
     setFilteredStudents(filtered);
   };
 
-  const getAttendanceForStudent = (studentId, date) => {
-    return attendance.find(record => 
-      record.studentId === studentId && 
-      format(new Date(record.date), "yyyy-MM-dd") === date
-    );
+const getAttendanceForStudent = (studentId, date) => {
+    return attendance.find(record => {
+      const recordStudentId = record.student_id_c?.Id || record.student_id_c || record.studentId;
+      const recordDate = record.date_c || record.date;
+      return recordStudentId === studentId && 
+             format(new Date(recordDate), "yyyy-MM-dd") === format(new Date(date), "yyyy-MM-dd");
+    });
   };
 
   const markAttendance = async (studentId, status) => {
@@ -80,25 +83,27 @@ const Attendance = () => {
       
       if (existingRecord) {
         // Update existing record
-        await attendanceService.update(existingRecord.Id, {
-          ...existingRecord,
-          status,
-          date: selectedDate
+await attendanceService.update(existingRecord.Id, {
+          student_id_c: studentId,
+          status_c: status,
+          date_c: selectedDate,
+          notes_c: existingRecord.notes_c || existingRecord.notes || "",
+          class_c: existingRecord.class_c || existingRecord.class || "General"
         });
         
+        // Update local state
         setAttendance(prev => prev.map(record => 
           record.Id === existingRecord.Id 
-            ? { ...record, status, date: selectedDate }
+            ? { ...record, status_c: status, status: status, date_c: selectedDate, date: selectedDate }
             : record
         ));
       } else {
-        // Create new record
         const newRecord = {
-          studentId,
-          date: selectedDate,
-          status,
-          notes: "",
-          class: "General"
+          student_id_c: studentId,
+          date_c: selectedDate,
+          status_c: status,
+          notes_c: "",
+          class_c: "General"
         };
         
         const created = await attendanceService.create(newRecord);
@@ -235,73 +240,82 @@ const Attendance = () => {
               
               <div className="divide-y divide-gray-200">
                 {filteredStudents.map((student) => {
-                  const attendanceRecord = getAttendanceForStudent(student.Id, selectedDate);
-                  const currentStatus = attendanceRecord?.status;
+const attendanceRecord = getAttendanceForStudent(student.Id, selectedDate);
+                  const currentStatus = attendanceRecord?.status_c || attendanceRecord?.status;
                   
-                  return (
-                    <div key={student.Id} className="px-6 py-4 hover:bg-gray-50">
+return (
+                    <div key={student.Id} className="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow duration-200">
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="flex-shrink-0 h-10 w-10">
-                            <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center">
-                              <span className="text-sm font-medium text-white">
-                                {student.firstName.charAt(0)}{student.lastName.charAt(0)}
-                              </span>
-                            </div>
+                        <div className="flex items-center space-x-3">
+                          <div className="h-10 w-10 rounded-full bg-gradient-to-r from-primary to-blue-600 flex items-center justify-center">
+                            <span className="text-sm font-medium text-white">
+                              {(student.first_name_c || student.firstName)?.charAt(0)}{(student.last_name_c || student.lastName)?.charAt(0)}
+                            </span>
                           </div>
                           <div>
                             <div className="text-sm font-medium text-gray-900">
-                              {student.firstName} {student.lastName}
+                              {student.first_name_c || student.firstName} {student.last_name_c || student.lastName}
                             </div>
-                            <div className="text-sm text-gray-500">
-                              {student.studentId} • Grade {student.gradeLevel}
+                            <div className="text-xs text-gray-500">
+                              {student.student_id_c || student.studentId} • Grade {student.grade_level_c || student.gradeLevel}
                             </div>
                           </div>
                         </div>
                         
-                        <div className="flex items-center space-x-3">
-                          {currentStatus && (
-                            <Badge variant={getStatusVariant(currentStatus)}>
-                              {currentStatus}
-                            </Badge>
-                          )}
+                        <div className="flex items-center space-x-2">
+                          {/* Present Button */}
+                          <Button
+                            variant={currentStatus === "Present" ? "success" : "outline"}
+                            size="sm"
+                            className="min-w-[80px]"
+                            onClick={() => markAttendance(student.Id, "Present")}
+                            disabled={saving}
+                          >
+                            <ApperIcon name="Check" className="h-4 w-4 mr-1" />
+                            Present
+                          </Button>
                           
-                          <div className="flex space-x-2">
-                            <Button
-                              variant={currentStatus === "Present" ? "success" : "outline"}
-                              size="sm"
-                              onClick={() => markAttendance(student.Id, "Present")}
-                              disabled={saving}
-                            >
-                              <ApperIcon name="Check" className="h-4 w-4 mr-1" />
-                              Present
-                            </Button>
-                            
-                            <Button
-                              variant={currentStatus === "Absent" ? "error" : "outline"}
-                              size="sm"
-                              onClick={() => markAttendance(student.Id, "Absent")}
-                              disabled={saving}
-                            >
-                              <ApperIcon name="X" className="h-4 w-4 mr-1" />
-                              Absent
-                            </Button>
-                            
-                            <Button
-                              variant={currentStatus === "Tardy" ? "warning" : "outline"}
-                              size="sm"
-                              onClick={() => markAttendance(student.Id, "Tardy")}
-                              disabled={saving}
-                            >
-                              <ApperIcon name="Clock" className="h-4 w-4 mr-1" />
-                              Tardy
-                            </Button>
-                          </div>
+                          {/* Absent Button */}
+                          <Button
+                            variant={currentStatus === "Absent" ? "error" : "outline"}
+                            size="sm"
+                            className="min-w-[80px]"
+                            onClick={() => markAttendance(student.Id, "Absent")}
+                            disabled={saving}
+                          >
+                            <ApperIcon name="X" className="h-4 w-4 mr-1" />
+                            Absent
+                          </Button>
+                          
+                          {/* Tardy Button */}
+                          <Button
+                            variant={currentStatus === "Tardy" ? "warning" : "outline"}
+                            size="sm"
+                            className="min-w-[80px]"
+                            onClick={() => markAttendance(student.Id, "Tardy")}
+                            disabled={saving}
+                          >
+                            <ApperIcon name="Clock" className="h-4 w-4 mr-1" />
+                            Tardy
+                          </Button>
                         </div>
                       </div>
                     </div>
                   );
                 })}
+              </div>
+            </Card>
+{/* Tardy Button */}
+                          <Button
+                            variant={currentStatus === "Tardy" ? "warning" : "outline"}
+                            size="sm"
+                            className="min-w-[80px]"
+                            onClick={() => markAttendance(student.Id, "Tardy")}
+                            disabled={saving}
+                          >
+                            <ApperIcon name="Clock" className="h-4 w-4 mr-1" />
+                            Tardy
+                          </Button>
               </div>
             </Card>
           </div>

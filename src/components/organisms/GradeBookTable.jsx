@@ -33,24 +33,24 @@ const GradeBookTable = ({ grades, className }) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {grades.map((grade) => (
-              <tr key={grade.Id}>
+<tr key={grade.Id}>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {grade.subject}
+                  {grade.subject_c || grade.subject}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {grade.assignment}
+                  {grade.assignment_c || grade.assignment}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <GradeIndicator 
-                    grade={grade.grade} 
-                    maxPoints={grade.maxPoints} 
+                    grade={grade.grade_c || grade.grade} 
+                    maxPoints={grade.max_points_c || grade.maxPoints} 
                   />
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {grade.gradingPeriod}
+                  {grade.grading_period_c || grade.gradingPeriod}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {new Date(grade.dateRecorded).toLocaleDateString()}
+                  {new Date(grade.date_recorded_c || grade.dateRecorded).toLocaleDateString()}
                 </td>
               </tr>
             ))}

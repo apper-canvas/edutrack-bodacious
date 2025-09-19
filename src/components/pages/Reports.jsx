@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { format, subDays, subMonths } from "date-fns";
 import Chart from "react-apexcharts";
-import StatCard from "@/components/molecules/StatCard";
+import ApperIcon from "@/components/ApperIcon";
 import Card from "@/components/atoms/Card";
 import Button from "@/components/atoms/Button";
 import Select from "@/components/atoms/Select";
-import ApperIcon from "@/components/ApperIcon";
+import Attendance from "@/components/pages/Attendance";
 import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
-import studentService from "@/services/api/studentService";
+import Error from "@/components/ui/Error";
+import StatCard from "@/components/molecules/StatCard";
 import attendanceService from "@/services/api/attendanceService";
 import gradeService from "@/services/api/gradeService";
+import studentService from "@/services/api/studentService";
 
 const Reports = () => {
   const [reportData, setReportData] = useState({
@@ -61,12 +62,12 @@ const Reports = () => {
       const date = subDays(new Date(), days - i - 1);
       const dateStr = format(date, "yyyy-MM-dd");
       
-      const dayAttendance = reportData.attendance.filter(record => 
-        format(new Date(record.date), "yyyy-MM-dd") === dateStr
+const dayAttendance = reportData.attendance.filter(record => 
+        format(new Date(record.date_c || record.date), "yyyy-MM-dd") === dateStr
       );
       
-      const present = dayAttendance.filter(r => r.status === "Present").length;
-      const absent = dayAttendance.filter(r => r.status === "Absent").length;
+      const present = dayAttendance.filter(r => (r.status_c || r.status) === "Present").length;
+      const absent = dayAttendance.filter(r => (r.status_c || r.status) === "Absent").length;
       const tardy = dayAttendance.filter(r => r.status === "Tardy").length;
       
       trends.push({
@@ -83,7 +84,9 @@ const Reports = () => {
 
   // Calculate grade distribution
   const getGradeDistribution = () => {
-    const grades = reportData.grades.filter(g => g.grade && g.maxPoints);
+const grades = reportData.grades.filter(g => 
+      (g.grade_c || g.grade) && (g.max_points_c || g.maxPoints)
+    );
     const distribution = { A: 0, B: 0, C: 0, D: 0, F: 0 };
     
     grades.forEach(grade => {
@@ -101,22 +104,30 @@ const Reports = () => {
   // Calculate statistics
   const getStatistics = () => {
     const totalStudents = reportData.students.length;
-    const activeStudents = reportData.students.filter(s => s.status === "Active").length;
-    
+const activeStudents = reportData.students.filter(s => 
+      (s.status_c || s.status) === "Active"
+    ).length;
     // Recent attendance (last 7 days)
-    const recentAttendance = reportData.attendance.filter(record => {
-      const recordDate = new Date(record.date);
-      const weekAgo = subDays(new Date(), 7);
-      return recordDate >= weekAgo;
+const recentAttendance = reportData.attendance.filter(record => {
+      const recordDate = new Date(record.date_c || record.date);
+      return recordDate >= startDate && recordDate <= endDate;
     });
     
+    // Calculate average attendance
     const averageAttendance = recentAttendance.length > 0 
-      ? Math.round((recentAttendance.filter(r => r.status === "Present").length / recentAttendance.length) * 100)
+      ? Math.round((recentAttendance.filter(r => (r.status_c || r.status) === "Present").length / recentAttendance.length) * 100)
       : 0;
     
-    // Average grade
-    const validGrades = reportData.grades.filter(g => g.grade && g.maxPoints);
+    // Calculate average grade
+    const validGrades = reportData.grades.filter(g => 
+      (g.grade_c || g.grade) && (g.max_points_c || g.maxPoints)
+    );
     const averageGrade = validGrades.length > 0 
+      ? Math.round(validGrades.reduce((sum, g) => {
+          const grade = g.grade_c || g.grade;
+          const maxPoints = g.max_points_c || g.maxPoints;
+          return sum + (grade / maxPoints * 100);
+        }, 0) / validGrades.length)
       ? Math.round(validGrades.reduce((sum, g) => sum + (g.grade / g.maxPoints * 100), 0) / validGrades.length)
       : 0;
     

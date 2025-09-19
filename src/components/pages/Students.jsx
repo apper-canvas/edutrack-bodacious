@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SearchBar from "@/components/molecules/SearchBar";
-import StudentTable from "@/components/organisms/StudentTable";
+import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 import Select from "@/components/atoms/Select";
-import ApperIcon from "@/components/ApperIcon";
+import StudentTable from "@/components/organisms/StudentTable";
+import Grades from "@/components/pages/Grades";
 import Loading from "@/components/ui/Loading";
-import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
+import Error from "@/components/ui/Error";
+import SearchBar from "@/components/molecules/SearchBar";
 import studentService from "@/services/api/studentService";
 
 const Students = () => {
@@ -47,28 +48,34 @@ const Students = () => {
     let filtered = [...students];
 
     // Search filter
-    if (searchTerm) {
+if (searchTerm) {
       const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(student => 
-        student.firstName.toLowerCase().includes(term) ||
-        student.lastName.toLowerCase().includes(term) ||
-        student.email.toLowerCase().includes(term) ||
-        student.studentId.toLowerCase().includes(term)
-      );
+      filtered = filtered.filter(student => {
+        const firstName = student.first_name_c || student.firstName || "";
+        const lastName = student.last_name_c || student.lastName || "";
+        const email = student.email_c || student.email || "";
+        const studentId = student.student_id_c || student.studentId || "";
+        
+        return firstName.toLowerCase().includes(term) ||
+               lastName.toLowerCase().includes(term) ||
+               email.toLowerCase().includes(term) ||
+               studentId.toLowerCase().includes(term);
+      });
     }
-
     // Grade level filter
     if (gradeFilter !== "all") {
-      filtered = filtered.filter(student => 
-        student.gradeLevel.toLowerCase() === gradeFilter.toLowerCase()
-      );
+filtered = filtered.filter(student => {
+        const gradeLevel = student.grade_level_c || student.gradeLevel || "";
+        return gradeLevel.toLowerCase() === gradeFilter.toLowerCase();
+      });
     }
 
     // Status filter
     if (statusFilter !== "all") {
-      filtered = filtered.filter(student => 
-        student.status.toLowerCase() === statusFilter.toLowerCase()
-      );
+filtered = filtered.filter(student => {
+        const status = student.status_c || student.status || "";
+        return status.toLowerCase() === statusFilter.toLowerCase();
+      });
     }
 
     setFilteredStudents(filtered);

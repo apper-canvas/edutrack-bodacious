@@ -50,44 +50,45 @@ const StudentTable = ({ students, className }) => {
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {students.map((student) => (
-              <tr key={student.Id} className="cursor-pointer" onClick={() => navigate(`/students/${student.Id}`)}>
+<tr key={student.Id} className="cursor-pointer" onClick={() => navigate(`/students/${student.Id}`)}>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
                     <div className="flex-shrink-0 h-10 w-10">
-                      <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center">
+                      <div className="h-10 w-10 rounded-full bg-gradient-to-r from-primary to-blue-600 flex items-center justify-center">
                         <span className="text-sm font-medium text-white">
-                          {student.firstName.charAt(0)}{student.lastName.charAt(0)}
+                          {(student.first_name_c || student.firstName)?.charAt(0)}{(student.last_name_c || student.lastName)?.charAt(0)}
                         </span>
                       </div>
                     </div>
                     <div className="ml-4">
                       <div className="text-sm font-medium text-gray-900">
-                        {student.firstName} {student.lastName}
+                        {student.first_name_c || student.firstName} {student.last_name_c || student.lastName}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {student.email}
+                        {student.email_c || student.email}
                       </div>
                     </div>
                   </div>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {student.studentId}
+                  {student.student_id_c || student.studentId}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {student.gradeLevel}
+                  {student.grade_level_c || student.gradeLevel}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap">
-                  <Badge variant={getStatusVariant(student.status)}>
-                    {student.status}
+                  <Badge variant={getStatusVariant(student.status_c || student.status)}>
+                    {student.status_c || student.status}
                   </Badge>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {new Date(student.enrollmentDate).toLocaleDateString()}
+                  {new Date(student.enrollment_date_c || student.enrollmentDate).toLocaleDateString()}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <Button
                     variant="ghost"
                     size="sm"
+                    className="text-primary hover:text-primary-dark"
                     onClick={(e) => {
                       e.stopPropagation();
                       navigate(`/students/${student.Id}`);
