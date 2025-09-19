@@ -9,11 +9,27 @@ class DepartmentService {
     });
   }
 
+// Transform database field names to UI field names
+  transformDepartmentData(department) {
+    if (!department) return department;
+    
+    return {
+      Id: department.Id,
+      name: department.name_c,
+      description: department.description_c,
+      headOfDepartment: department.head_of_department_c,
+      email: department.email_c,
+      phone: department.phone_c,
+      budget: department.budget_c,
+      status: department.status_c
+    };
+  }
+
   async getAll() {
     try {
       const params = {
-fields: [
-{"field": {"Name": "Id"}},
+        fields: [
+          {"field": {"Name": "Id"}},
           {"field": {"Name": "name_c"}},
           {"field": {"Name": "description_c"}},
           {"field": {"Name": "head_of_department_c"}},
@@ -33,7 +49,8 @@ fields: [
         throw new Error(response.message);
       }
 
-      return response.data || [];
+const departments = response.data || [];
+      return departments.map(dept => this.transformDepartmentData(dept));
     } catch (error) {
       console.error('Error fetching departments:', error?.response?.data?.message || error.message || error);
       throw error;
@@ -60,8 +77,7 @@ fields: [
       if (!response?.data) {
         throw new Error('Department not found');
       }
-
-      return response.data;
+return this.transformDepartmentData(response.data);
     } catch (error) {
       console.error(`Error fetching department ${id}:`, error?.response?.data?.message || error.message || error);
       throw error;
@@ -99,7 +115,7 @@ name_c: departmentData.name,
           throw new Error(errorMessage);
         }
         
-        return response.results[0].data;
+return this.transformDepartmentData(response.results[0].data);
       }
 
       return response.data;
@@ -141,7 +157,7 @@ name_c: departmentData.name,
           throw new Error(errorMessage);
         }
         
-        return response.results[0].data;
+return this.transformDepartmentData(response.results[0].data);
       }
 
       return response.data;
